@@ -9,6 +9,12 @@ import { createRandomToken } from '../../../actions/authentication';
 
 export const prerender = false;
 
+const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Authentication, Content-Type',
+};
+
 const schema = z.object({ name: z.string() });
 
 function getFileExtension(name: string) {
@@ -39,14 +45,21 @@ export async function POST(context: APIContext) {
     const result = {
         uploadToken,
         id,
-        url: new URL(`${config.baseUrl}/files/${id}`).toString(),
+        url: `${config.secure ? 'https' : 'http'}://${config.host}/files/${id}`,
     };
 
     return new Response(JSON.stringify(result), {
         status: 200,
         headers: {
-            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
+            ...headers,
         },
+    });
+}
+
+export async function OPTIONS(context: APIContext) {
+    return new Response(null, {
+        status: 200,
+        headers,
     });
 }

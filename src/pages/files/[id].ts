@@ -5,6 +5,12 @@ import { and, eq, isNotNull, isNull } from 'drizzle-orm';
 
 export const prerender = false;
 
+const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Authentication, Content-Type',
+};
+
 export async function GET(context: APIContext) {
     const { id } = context.params;
 
@@ -22,7 +28,7 @@ export async function GET(context: APIContext) {
         headers: {
             'Content-Type': 'application/octet-stream',
             'Content-Disposition': `attachment; filename="${file.name}"`,
-            'Access-Control-Allow-Origin': '*',
+            ...headers,
         },
     });
 }
@@ -57,7 +63,14 @@ export async function POST(context: APIContext) {
         status: 200,
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            ...headers,
         },
+    });
+}
+
+export async function OPTIONS(context: APIContext) {
+    return new Response(null, {
+        status: 200,
+        headers,
     });
 }
