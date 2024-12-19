@@ -62,7 +62,7 @@ function Wrapped(props: Props) {
                                 <thead>
                                     <tr>
                                         <td class="font-bold">File Name</td>
-                                        <td class="font-bold">File ID</td>
+                                        <td class="font-bold max-sm:hidden">File ID</td>
                                         <td></td>
                                     </tr>
                                 </thead>
@@ -74,7 +74,7 @@ function Wrapped(props: Props) {
                                                     {file.name}
                                                 </a>
                                             </td>
-                                            <td>{file.id}</td>
+                                            <td class="max-sm:hidden">{file.id}</td>
                                             <td>
                                                 <FileEditorButtons file={file} />
                                             </td>
