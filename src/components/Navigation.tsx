@@ -4,9 +4,9 @@ export default function () {
     return (
         <Navigation>
             <Home href="/">Home</Home>
-            <Entry href="/">Home</Entry>
-            <Entry href="/">Home</Entry>
-            <Entry href="/">Home</Entry>
+            <Entry href="/projects">Projects</Entry>
+            <Entry href="/users">Users</Entry>
+            <Entry href="/me">Profile</Entry>
         </Navigation>
     );
 }
