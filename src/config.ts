@@ -11,6 +11,7 @@ export function validateOrThrow<T>(schema: ZodSchema<T>, data: unknown): T {
     return result.data;
 }
 const schema = z.object({
+    baseUrl: z.string(),
     database: z.object({ authToken: z.string().optional(), url: z.string() }),
 });
 

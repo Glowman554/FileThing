@@ -22,6 +22,7 @@ export async function GET(context: APIContext) {
         headers: {
             'Content-Type': 'application/octet-stream',
             'Content-Disposition': `attachment; filename="${file.name}"`,
+            'Access-Control-Allow-Origin': '*',
         },
     });
 }
@@ -56,6 +57,7 @@ export async function POST(context: APIContext) {
         status: 200,
         headers: {
             'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
         },
     });
 }
