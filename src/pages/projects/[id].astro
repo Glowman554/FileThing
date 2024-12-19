@@ -1,0 +1,12 @@
+---
+import Layout from '../../components/Layout.astro';
+import ProjectInfo from '../../components/projects/ProjectInfo';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+---
+
+<Layout title="FileThing | Project">
+    <ProjectInfo client:load id={id!} />
+</Layout>

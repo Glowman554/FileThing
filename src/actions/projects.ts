@@ -77,12 +77,8 @@ export const projects = {
         async handler(input, context) {
             const user = await permission(context, (u) => true);
 
-            const loaded = db
-                .select({
-                    name: Projects.name,
-                    id: Projects.id,
-                    username: Projects.username,
-                })
+            const loaded = await db
+                .select()
                 .from(Projects)
                 .where(and(eq(Projects.id, input.id), eq(Projects.username, user.username)))
                 .get();
