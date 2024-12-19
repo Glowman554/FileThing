@@ -8,6 +8,7 @@ import Overlay from '@glowman554/base-components/src/generic/Overlay';
 
 export interface Props {
     check: (u: User) => boolean;
+    children?: JSX.Element;
 }
 
 export default function (props: Props) {
@@ -16,29 +17,31 @@ export default function (props: Props) {
     return (
         <Query f={() => actions.authentication.status.orThrow()} queryKey="internal-status">
             {(user) => (
-                <Overlay visible={!(user && props.check(user))}>
-                    <div class="field">
-                        <p>You can't access this page</p>
-                        <Show when={!user}>
-                            <LoginEditor
-                                submit={(username, password, loading) =>
-                                    withQuery(
-                                        () =>
-                                            actions.authentication.login.orThrow({
-                                                username,
-                                                password,
-                                            }),
-                                        loading,
-                                        false,
-                                        () => {
-                                            query.refetch('internal-status');
-                                        }
-                                    )
-                                }
-                            />
-                        </Show>
-                    </div>
-                </Overlay>
+                <Show when={!(user && props.check(user))} fallback={props.children}>
+                    <Overlay visible={true}>
+                        <div class="field">
+                            <p>You can't access this page</p>
+                            <Show when={!user}>
+                                <LoginEditor
+                                    submit={(username, password, loading) =>
+                                        withQuery(
+                                            () =>
+                                                actions.authentication.login.orThrow({
+                                                    username,
+                                                    password,
+                                                }),
+                                            loading,
+                                            false,
+                                            () => {
+                                                query.refetch('internal-status');
+                                            }
+                                        )
+                                    }
+                                />
+                            </Show>
+                        </div>
+                    </Overlay>
+                </Show>
             )}
         </Query>
     );
