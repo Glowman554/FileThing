@@ -39,41 +39,56 @@ function Wrapped(props: Props) {
                 submit();
             }}
         >
-            <div class="section">
-                Username
-                <input
-                    type="text"
-                    value={username()}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                    disabled={Boolean(props.initial)}
-                />
-            </div>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="text-nowrap pr-2">Username</td>
+                        <td class="w-full">
+                            <input
+                                type="text"
+                                class="w-full"
+                                value={username()}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                                disabled={Boolean(props.initial)}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-nowrap pr-2">
+                            <label for="input-administrator">Administrator</label>
+                        </td>
+                        <td class="w-full">
+                            <input
+                                type="checkbox"
+                                class="w-full"
+                                id="input-administrator"
+                                checked={administrator()}
+                                onChange={(e) => setAdministrator(e.target.checked)}
+                            />
+                        </td>
+                    </tr>
+                    <Show when={!props.initial}>
+                        <tr>
+                            <td class="text-nowrap pr-2">Password</td>
+                            <td class="w-full">
+                                <input
+                                    type="password"
+                                    class="w-full"
+                                    value={initialPassword()}
+                                    onChange={(e) => setInitialPassword(e.target.value)}
+                                    required
+                                />
+                            </td>
+                        </tr>
+                    </Show>
+                </tbody>
+            </table>
 
-            <div class="section">
-                <label for="input-administrator">Administrator</label>
-                <input
-                    type="checkbox"
-                    id="input-administrator"
-                    checked={administrator()}
-                    onChange={(e) => setAdministrator(e.target.checked)}
-                />
-            </div>
-
-            <Show when={!props.initial}>
-                <div class="section">
-                    Password
-                    <input
-                        type="password"
-                        value={initialPassword()}
-                        onChange={(e) => setInitialPassword(e.target.value)}
-                        required
-                    />
-                </div>
-            </Show>
+            <br />
 
             <div class="center">
-                <button type="submit">
+                <button class="button" type="submit">
                     <Show when={props.initial} fallback={<>Create</>}>
                         Update
                     </Show>

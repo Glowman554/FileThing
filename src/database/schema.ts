@@ -21,7 +21,8 @@ export const Sessions = sqliteTable('sessions', {
 });
 
 export const Projects = sqliteTable('projects', {
-    name: text('name').notNull().primaryKey(),
+    name: text('name').notNull().unique(),
+    id: text('id').notNull().primaryKey(),
     username: text('username')
         .references(() => Users.username, { onDelete: 'cascade', onUpdate: 'cascade' })
         .notNull(),
