@@ -4,8 +4,10 @@ import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
 import { db } from '../database/database';
 import { permission } from './authentication';
+import { config } from '../config';
+import { file } from 'astro/loaders';
 
-export type File = Omit<Omit<InferSelectModel<typeof Files>, 'content'>, 'uploadToken'>;
+export type File = Omit<Omit<InferSelectModel<typeof Files>, 'content'>, 'uploadToken'> & { url: string };
 
 export const files = {
     loadAll: defineAction({
@@ -23,7 +25,10 @@ export const files = {
                 .innerJoin(Projects, eq(Files.project, Projects.id))
                 .where(and(eq(Files.project, input.projectId), eq(Projects.username, user.username)));
 
-            return files;
+            return files.map((file) => ({
+                ...file,
+                url: `${config.secure ? 'https' : 'http'}://${config.host}/files/${file.id}`,
+            })) satisfies File[];
         },
     }),
 

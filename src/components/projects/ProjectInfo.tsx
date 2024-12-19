@@ -3,16 +3,18 @@ import UserOnly from '../UserOnly';
 import Query, { withQuery } from '@glowman554/base-components/src/query/Query';
 import { actions } from 'astro:actions';
 import { untrack } from 'solid-js/web';
-import { createSignal } from 'solid-js';
+import { createSignal, useContext } from 'solid-js';
 import Overlay from '@glowman554/base-components/src/generic/Overlay';
 import DeleteButton from '@glowman554/base-components/src/generic/DeleteButton';
 import type { File } from '../../actions/files';
+import { QueryContext } from '@glowman554/base-components/src/query/QueryController';
 
 export interface Props {
     id: string;
 }
 
 export function FileEditorButtons(props: { file: File }) {
+    const query = useContext(QueryContext);
     return (
         <DeleteButton
             callback={(id, loading) =>
@@ -20,7 +22,7 @@ export function FileEditorButtons(props: { file: File }) {
                     () => actions.files.delete.orThrow({ id }),
                     loading,
                     false,
-                    () => location.reload()
+                    () => query.refetch('file-list')
                 )
             }
             id={props.file.id}
@@ -31,7 +33,7 @@ export function FileEditorButtons(props: { file: File }) {
 function Wrapped(props: Props) {
     const [tokenVisible, setTokenVisible] = createSignal(false);
     return (
-        <Query f={() => actions.projects.load.orThrow({ id: untrack(() => props.id) })}>
+        <Query f={() => actions.projects.load.orThrow({ id: untrack(() => props.id) })} queryKey="file-list">
             {(project) => (
                 <div>
                     <h1 class="text-3xl">{project.name}</h1>
@@ -54,31 +56,34 @@ function Wrapped(props: Props) {
                             </div>
                         </div>
                     </Overlay>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th>File ID</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <Query f={() => actions.files.loadAll.orThrow({ projectId: project.id })}>
-                                {(files) =>
-                                    files.map((file) => (
+                    <Query f={() => actions.files.loadAll.orThrow({ projectId: project.id })}>
+                        {(files) => (
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <td class="font-bold">File Name</td>
+                                        <td class="font-bold">File ID</td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {files.map((file) => (
                                         <tr>
-                                            <td>{file.name}</td>
+                                            <td>
+                                                <a class="underline" href={file.url}>
+                                                    {file.name}
+                                                </a>
+                                            </td>
                                             <td>{file.id}</td>
                                             <td>
                                                 <FileEditorButtons file={file} />
                                             </td>
                                         </tr>
-                                    ))
-                                }
-                            </Query>
-                        </tbody>
-                    </table>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </Query>
                 </div>
             )}
         </Query>
