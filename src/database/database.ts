@@ -12,3 +12,8 @@ await db
     .insert(schema.Users)
     .values({ username: 'admin', administrator: true, passwordHash: hashSync('admin') })
     .onConflictDoNothing();
+
+await db
+    .insert(schema.Projects)
+    .values({ name: 'Test', projectToken: 'ahiudflvhiluadfvhiluafdv', username: 'admin' })
+    .onConflictDoNothing();

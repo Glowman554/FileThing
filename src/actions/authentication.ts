@@ -19,7 +19,8 @@ function getToken(context: ActionAPIContext) {
 function setToken(context: ActionAPIContext, token: string) {
     context.cookies.set('token', token, { path: '/' });
 }
-function createRandomToken() {
+
+export function createRandomToken() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
     let str = '';

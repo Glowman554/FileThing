@@ -1,13 +1,9 @@
-import { defineAction } from 'astro:actions';
-import { z } from 'astro:schema';
 import { authentication } from './authentication';
+import { projects } from './projects';
+import { files } from './files';
 
 export const server = {
-    double: defineAction({
-        input: z.number(),
-        handler(input, context) {
-            return input * 2;
-        },
-    }),
     authentication,
+    projects,
+    files,
 };
