@@ -9,11 +9,11 @@ import { migrate } from 'drizzle-orm/libsql/migrator';
 export const client = createClient({ ...config.database });
 export const db = drizzle(client, { schema });
 
+await migrate(db, {
+    migrationsFolder: './drizzle',
+});
+
 await db
     .insert(schema.Users)
     .values({ username: 'admin', administrator: true, passwordHash: hashSync('admin') })
     .onConflictDoNothing();
-
-await migrate(db, {
-    migrationsFolder: './drizzle',
-});
