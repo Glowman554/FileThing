@@ -45,15 +45,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "files_project_projects_name_fk": {
-          "name": "files_project_projects_name_fk",
+        "files_project_projects_id_fk": {
+          "name": "files_project_projects_id_fk",
           "tableFrom": "files",
           "tableTo": "projects",
           "columnsFrom": [
             "project"
           ],
           "columnsTo": [
-            "name"
+            "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "cascade"

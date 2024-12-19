@@ -32,7 +32,7 @@ export const Projects = sqliteTable('projects', {
 export const Files = sqliteTable('files', {
     id: text('id').notNull().primaryKey(),
     project: text('project')
-        .references(() => Projects.name, { onDelete: 'cascade', onUpdate: 'cascade' })
+        .references(() => Projects.id, { onDelete: 'cascade', onUpdate: 'cascade' })
         .notNull(),
     name: text('name').notNull(),
     uploadToken: text('uploadToken').notNull(),

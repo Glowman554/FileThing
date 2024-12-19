@@ -4,7 +4,7 @@ CREATE TABLE `files` (
 	`name` text NOT NULL,
 	`uploadToken` text NOT NULL,
 	`content` blob,
-	FOREIGN KEY (`project`) REFERENCES `projects`(`name`) ON UPDATE cascade ON DELETE cascade
+	FOREIGN KEY (`project`) REFERENCES `projects`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `projects` (

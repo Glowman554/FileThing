@@ -1,13 +1,31 @@
 import Loading from '@glowman554/base-components/src/loading/Loading';
 import UserOnly from '../UserOnly';
-import Query from '@glowman554/base-components/src/query/Query';
+import Query, { withQuery } from '@glowman554/base-components/src/query/Query';
 import { actions } from 'astro:actions';
 import { untrack } from 'solid-js/web';
 import { createSignal } from 'solid-js';
 import Overlay from '@glowman554/base-components/src/generic/Overlay';
+import DeleteButton from '@glowman554/base-components/src/generic/DeleteButton';
+import type { File } from '../../actions/files';
 
 export interface Props {
     id: string;
+}
+
+export function FileEditorButtons(props: { file: File }) {
+    return (
+        <DeleteButton
+            callback={(id, loading) =>
+                withQuery(
+                    () => actions.files.delete.orThrow({ id }),
+                    loading,
+                    false,
+                    () => location.reload()
+                )
+            }
+            id={props.file.id}
+        />
+    );
 }
 
 function Wrapped(props: Props) {
@@ -36,6 +54,31 @@ function Wrapped(props: Props) {
                             </div>
                         </div>
                     </Overlay>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>File ID</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Query f={() => actions.files.loadAll.orThrow({ projectId: project.id })}>
+                                {(files) =>
+                                    files.map((file) => (
+                                        <tr>
+                                            <td>{file.name}</td>
+                                            <td>{file.id}</td>
+                                            <td>
+                                                <FileEditorButtons file={file} />
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </Query>
+                        </tbody>
+                    </table>
                 </div>
             )}
         </Query>
