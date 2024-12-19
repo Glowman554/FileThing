@@ -40,7 +40,7 @@ export async function POST(context: APIContext) {
     const id = v4() + (extension ? `.${extension}` : '');
     const uploadToken = createRandomToken();
 
-    await db.insert(Files).values({ id, name: input.name, project: project.name, uploadToken: uploadToken });
+    await db.insert(Files).values({ id, name: input.name, project: project.id, uploadToken: uploadToken });
 
     const result = {
         uploadToken,
