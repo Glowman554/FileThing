@@ -14,7 +14,7 @@ const headers = {
     'Access-Control-Allow-Headers': 'Authentication, Content-Type',
 };
 
-const schema = z.object({ url: z.string().url() });
+const schema = z.object({ url: z.string().url(), name: z.string().optional() });
 
 function getFileExtension(name: string) {
     const parts = name.split('.');
@@ -34,11 +34,7 @@ export async function POST(context: APIContext) {
     }
 
     const project = await getProject(token);
-
-    const name = input.url.split('/').pop();
-    if (!name) {
-        throw new Error('Invalid URL');
-    }
+    const name = input.name || v4();
     const extension = getFileExtension(name);
     const id = v4() + (extension ? `.${extension}` : '');
 
