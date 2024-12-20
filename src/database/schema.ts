@@ -35,6 +35,6 @@ export const Files = sqliteTable('files', {
         .references(() => Projects.id, { onDelete: 'cascade', onUpdate: 'cascade' })
         .notNull(),
     name: text('name').notNull(),
-    uploadToken: text('uploadToken').notNull(),
+    uploadToken: text('uploadToken'),
     content: blob('content', { mode: 'buffer' }),
 });
