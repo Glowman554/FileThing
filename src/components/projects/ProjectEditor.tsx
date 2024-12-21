@@ -31,7 +31,7 @@ function Wrapped(props: Props) {
                         <td class="w-full">
                             <input
                                 type="text"
-                                class="w-full"
+                                class="input w-full"
                                 value={name()}
                                 onChange={(e) => setName(e.target.value)}
                                 required

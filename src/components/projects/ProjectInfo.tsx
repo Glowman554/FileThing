@@ -37,12 +37,12 @@ function Wrapped(props: Props) {
             {(project) => (
                 <div>
                     <h1 class="text-3xl">{project.name}</h1>
-                    <button class="rounded-sm bg-slate-600 p-2" onClick={() => setTokenVisible(true)}>
+                    <button class="rounded-sm bg-neutral-600 p-2" onClick={() => setTokenVisible(true)}>
                         Show token
                     </button>
                     <Overlay visible={tokenVisible()}>
                         <div class="field">
-                            <div class="overflow-x-scroll bg-slate-300 p-4">{project.projectToken}</div>
+                            <div class="overflow-x-scroll bg-neutral-600 p-4">{project.projectToken}</div>
                             <div class="center">
                                 <button class="button" onClick={() => setTokenVisible(false)}>
                                     Close

@@ -46,7 +46,7 @@ function Wrapped(props: Props) {
                         <td class="w-full">
                             <input
                                 type="text"
-                                class="w-full"
+                                class="input w-full"
                                 value={username()}
                                 onChange={(e) => setUsername(e.target.value)}
                                 required
@@ -61,7 +61,7 @@ function Wrapped(props: Props) {
                         <td class="w-full">
                             <input
                                 type="checkbox"
-                                class="w-full"
+                                class="input w-full"
                                 id="input-administrator"
                                 checked={administrator()}
                                 onChange={(e) => setAdministrator(e.target.checked)}
@@ -74,7 +74,7 @@ function Wrapped(props: Props) {
                             <td class="w-full">
                                 <input
                                     type="password"
-                                    class="w-full"
+                                    class="input w-full"
                                     value={initialPassword()}
                                     onChange={(e) => setInitialPassword(e.target.value)}
                                     required
