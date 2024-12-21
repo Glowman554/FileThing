@@ -4,6 +4,8 @@ import { Files } from '../../../../database/schema';
 import { db } from '../../../../database/database';
 import { getProject } from '../../../../actions/projects';
 
+export const prerender = false;
+
 const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET',
