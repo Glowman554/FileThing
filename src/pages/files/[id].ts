@@ -28,6 +28,7 @@ export async function GET(context: APIContext) {
         headers: {
             'Content-Type': 'application/octet-stream',
             'Content-Disposition': `attachment; filename="${file.name}"`,
+            'Content-Length': file.content!.length.toString(),
             ...headers,
         },
     });
