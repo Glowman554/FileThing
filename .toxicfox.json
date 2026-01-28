@@ -19,9 +19,7 @@
                 "{{base}}/data/FileThing/config.json": "/srv/config.json",
                 "{{base}}/data/FileThing/data.db": "/srv/data.db"
             },
-            "networks": [
-                "router"
-            ]
+            "networks": ["router"]
         }
     ]
 }

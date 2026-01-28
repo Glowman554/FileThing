@@ -1,6 +1,6 @@
-import { and, eq, type InferSelectModel } from 'drizzle-orm';
+import { and, eq, sql, type InferSelectModel } from 'drizzle-orm';
 import { db } from '../database/database';
-import { Projects } from '../database/schema';
+import { Files, Projects } from '../database/schema';
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
 import { createRandomToken, permission } from './authentication';
@@ -88,6 +88,18 @@ export const projects = {
             }
 
             return loaded;
+        },
+    }),
+
+    clearFiles: defineAction({
+        input: z.object({
+            id: z.string(),
+        }),
+        async handler(input, context) {
+            await permission(context, (u) => true);
+
+            await db.delete(Files).where(eq(Files.project, input.id));
+            await db.run(sql`vacuum`);
         },
     }),
 };

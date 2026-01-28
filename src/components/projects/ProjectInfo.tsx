@@ -1,4 +1,4 @@
-import Loading from '@glowman554/base-components/src/loading/Loading';
+import Loading, { LoadingContext } from '@glowman554/base-components/src/loading/Loading';
 import UserOnly from '../UserOnly';
 import Query, { withQuery } from '@glowman554/base-components/src/query/Query';
 import { actions } from 'astro:actions';
@@ -30,6 +30,47 @@ export function FileEditorButtons(props: { file: File }) {
     );
 }
 
+function ClearProjectButton(props: { projectId: string }) {
+    const [clearProjectVisible, setClearProjectVisible] = createSignal(false);
+    const loading = useContext(LoadingContext);
+
+    return (
+        <>
+            <button class="ml-4 rounded-sm bg-red-600 p-2" onClick={() => setClearProjectVisible(true)}>
+                Clear project files
+            </button>
+            <Overlay visible={clearProjectVisible()}>
+                <div class="field">
+                    <div class="center">
+                        <h1>Are you sure you want to clear all files from this project?</h1>
+                    </div>
+
+                    <div class="center">
+                        <button class="button" onClick={() => setClearProjectVisible(false)}>
+                            Close
+                        </button>
+                        <button
+                            class="button !bg-red-600"
+                            onClick={() =>
+                                withQuery(
+                                    () => actions.projects.clearFiles.orThrow({ id: props.projectId }),
+                                    loading,
+                                    true,
+                                    () => {
+                                        location.reload();
+                                    }
+                                )
+                            }
+                        >
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </Overlay>
+        </>
+    );
+}
+
 function Wrapped(props: Props) {
     const [tokenVisible, setTokenVisible] = createSignal(false);
     return (
@@ -37,9 +78,12 @@ function Wrapped(props: Props) {
             {(project) => (
                 <div>
                     <h1 class="text-3xl">{project.name}</h1>
+                    <br />
                     <button class="rounded-sm bg-neutral-600 p-2" onClick={() => setTokenVisible(true)}>
                         Show token
                     </button>
+                    <ClearProjectButton projectId={project.id} />
+
                     <Overlay visible={tokenVisible()}>
                         <div class="field">
                             <div class="overflow-x-scroll bg-neutral-600 p-4">{project.projectToken}</div>
@@ -56,6 +100,7 @@ function Wrapped(props: Props) {
                             </div>
                         </div>
                     </Overlay>
+
                     <Query f={() => actions.files.loadAll.orThrow({ projectId: project.id })}>
                         {(files) => (
                             <table class="w-full">
