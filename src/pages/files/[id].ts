@@ -11,6 +11,9 @@ const headers = {
     'Access-Control-Allow-Headers': 'Authentication, Content-Type',
 };
 
+// 90 days in seconds
+const cacheLifetime = 90 * 24 * 60 * 60;
+
 export async function GET(context: APIContext) {
     const { id } = context.params;
 
@@ -29,10 +32,12 @@ export async function GET(context: APIContext) {
             'Content-Type': 'application/octet-stream',
             'Content-Disposition': `attachment; filename="${file.name}"`,
             'Content-Length': file.content!.length.toString(),
+            'Cache-Control': `public, max-age=${cacheLifetime}`,
             ...headers,
         },
     });
 }
+
 
 export async function POST(context: APIContext) {
     const { id } = context.params;
