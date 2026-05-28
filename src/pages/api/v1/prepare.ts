@@ -23,7 +23,7 @@ export async function POST(context: APIContext) {
 
     const result = await context.callAction(actions.projects.prepare, { token, name: input.name });
 
-    return new Response(JSON.stringify(result), {
+    return new Response(JSON.stringify(result.data), {
         status: 200,
         headers: {
             'Content-Type': 'application/json',
