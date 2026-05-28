@@ -6,10 +6,12 @@ import AdministratorOnly from '../AdministratorOnly';
 import ProjectNewButton from './ProjectNewButton';
 import { ProjectEditorButtons } from './ProjectEditor';
 import UserOnly from '../UserOnly';
+import VacuumButton from './VacuumButton';
 
 function Wrapped() {
     return (
         <>
+            <VacuumButton />
             <ProjectNewButton />
             <Query f={() => actions.projects.loadAll.orThrow()}>
                 {(projects) => (

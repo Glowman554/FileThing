@@ -42,7 +42,7 @@ function Wrapped(props: Props) {
             <table>
                 <tbody>
                     <tr>
-                        <td class="text-nowrap pr-2">Username</td>
+                        <td class="pr-2 text-nowrap">Username</td>
                         <td class="w-full">
                             <input
                                 type="text"
@@ -55,7 +55,7 @@ function Wrapped(props: Props) {
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pr-2">
+                        <td class="pr-2 text-nowrap">
                             <label for="input-administrator">Administrator</label>
                         </td>
                         <td class="w-full">
@@ -70,7 +70,7 @@ function Wrapped(props: Props) {
                     </tr>
                     <Show when={!props.initial}>
                         <tr>
-                            <td class="text-nowrap pr-2">Password</td>
+                            <td class="pr-2 text-nowrap">Password</td>
                             <td class="w-full">
                                 <input
                                     type="password"
@@ -125,7 +125,7 @@ export function UserEditorButtons(props: { user: User }) {
                 id={props.user.username}
             />
             <EditButton callback={() => setEditVisible(true)} />
-            <Overlay visible={editVisible()}>
+            <Overlay visible={editVisible()} reset={() => setEditVisible(false)}>
                 <UserEditor
                     initial={props.user}
                     submit={(username, administrator, loading) =>

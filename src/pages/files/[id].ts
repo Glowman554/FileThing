@@ -26,7 +26,9 @@ export async function GET(context: APIContext) {
         throw new Error('Invalid file id');
     }
 
-    return new Response(file.content, {
+    const blob = new Blob([new Uint8Array(file.content!)]);
+
+    return new Response(blob, {
         status: 200,
         headers: {
             'Content-Type': 'application/octet-stream',
@@ -37,7 +39,6 @@ export async function GET(context: APIContext) {
         },
     });
 }
-
 
 export async function POST(context: APIContext) {
     const { id } = context.params;

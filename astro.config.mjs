@@ -2,17 +2,22 @@
 import { defineConfig } from 'astro/config';
 import solid from '@astrojs/solid-js';
 
-import node from '@astrojs/node';
+import tailwindcss from '@tailwindcss/vite';
 
-import tailwind from '@astrojs/tailwind';
+import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
     // Enable Solid to support Solid JSX components.
-    integrations: [solid({ include: ['**'] }), tailwind()],
+    site: 'https://glowman554.de',
+    integrations: [solid({ include: ['**'] })],
 
     security: {
         checkOrigin: false,
+    },
+
+    vite: {
+        plugins: [tailwindcss()],
     },
 
     adapter: node({

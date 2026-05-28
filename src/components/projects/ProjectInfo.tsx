@@ -8,6 +8,7 @@ import Overlay from '@glowman554/base-components/src/generic/Overlay';
 import DeleteButton from '@glowman554/base-components/src/generic/DeleteButton';
 import type { File } from '../../actions/files';
 import { QueryContext } from '@glowman554/base-components/src/query/QueryController';
+import UploadButton from './UploadButton';
 
 export interface Props {
     id: string;
@@ -39,7 +40,7 @@ function ClearProjectButton(props: { projectId: string }) {
             <button class="ml-4 rounded-sm bg-red-600 p-2" onClick={() => setClearProjectVisible(true)}>
                 Clear project files
             </button>
-            <Overlay visible={clearProjectVisible()}>
+            <Overlay visible={clearProjectVisible()} reset={() => setClearProjectVisible(false)}>
                 <div class="field">
                     <div class="center">
                         <h1>Are you sure you want to clear all files from this project?</h1>
@@ -79,12 +80,25 @@ function Wrapped(props: Props) {
                 <div>
                     <h1 class="text-3xl">{project.name}</h1>
                     <br />
-                    <button class="rounded-sm bg-neutral-600 p-2" onClick={() => setTokenVisible(true)}>
-                        Show token
-                    </button>
-                    <ClearProjectButton projectId={project.id} />
+                    <div class='flex justify-between'>
+                        <div>
+                            <button class="rounded-sm bg-neutral-600 p-2" onClick={() => setTokenVisible(true)}>
+                                Show token
+                            </button>
+                            <ClearProjectButton projectId={project.id} />
+                        </div>
+                        <div>
+                            <UploadButton
+                                token={project.projectToken}
+                                callback={(url) => {
+                                    console.log(url);
+                                    location.reload();
+                                }}
+                            />
+                        </div>
+                    </div>
 
-                    <Overlay visible={tokenVisible()}>
+                    <Overlay visible={tokenVisible()} reset={() => setTokenVisible(false)}>
                         <div class="field">
                             <div class="overflow-x-scroll bg-neutral-600 p-4">{project.projectToken}</div>
                             <div class="center">

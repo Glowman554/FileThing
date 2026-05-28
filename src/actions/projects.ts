@@ -2,9 +2,10 @@ import { and, eq, sql, type InferSelectModel } from 'drizzle-orm';
 import { db } from '../database/database';
 import { Files, Projects } from '../database/schema';
 import { defineAction } from 'astro:actions';
-import { z } from 'astro:schema';
+import { string, z } from 'astro:schema';
 import { createRandomToken, permission } from './authentication';
 import { v4 } from 'uuid';
+import { config } from '../config';
 
 export async function getProject(token: string) {
     const project = await db.select().from(Projects).where(eq(Projects.projectToken, token)).get();
@@ -17,6 +18,15 @@ export async function getProject(token: string) {
 
 export type Project = InferSelectModel<typeof Projects>;
 export type PartialProject = Omit<Project, 'projectToken'>;
+
+function getFileExtension(name: string) {
+    const parts = name.split('.');
+    if (parts.length < 2) {
+        return undefined;
+    }
+
+    return parts[parts.length - 1];
+}
 
 export const projects = {
     create: defineAction({
@@ -100,6 +110,38 @@ export const projects = {
 
             await db.delete(Files).where(eq(Files.project, input.id));
             await db.run(sql`vacuum`);
+        },
+    }),
+
+    vacuum: defineAction({
+        async handler(input, context) {
+            await permission(context, (u) => true);
+
+            await db.run(sql`vacuum`);
+        },
+    }),
+
+    prepare: defineAction({
+        input: z.object({
+            token: z.string(),
+            name: z.string(),
+        }),
+        async handler(input, context) {
+            const project = await getProject(input.token);
+
+            const extension = getFileExtension(input.name);
+            const id = v4() + (extension ? `.${extension}` : '');
+            const uploadToken = createRandomToken();
+
+            await db.insert(Files).values({ id, name: input.name, project: project.id, uploadToken: uploadToken });
+
+            const result = {
+                uploadToken,
+                id,
+                url: `${config.secure ? 'https' : 'http'}://${config.host}/files/${id}`,
+            };
+
+            return result;
         },
     }),
 };

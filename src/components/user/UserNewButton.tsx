@@ -11,7 +11,7 @@ export default function () {
             <button class="button" onClick={() => setNewVisible(true)}>
                 New user
             </button>
-            <Overlay visible={newVisible()}>
+            <Overlay visible={newVisible()} reset={() => setNewVisible(false)}>
                 <UserEditor
                     submit={(username, password, administrator, loading) =>
                         withQuery(
