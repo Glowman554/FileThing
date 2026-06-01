@@ -43,15 +43,14 @@ export async function authenticate(context: ActionAPIContext) {
         return undefined;
     }
 
-    const user = await db
+    const [user] = await db
         .select({
             username: Users.username,
             administrator: Users.administrator,
         })
         .from(Sessions)
         .where(eq(Sessions.token, token))
-        .innerJoin(Users, eq(Sessions.username, Users.username))
-        .get();
+        .innerJoin(Users, eq(Sessions.username, Users.username));
     return user satisfies User | undefined;
 }
 
@@ -78,7 +77,7 @@ export const authentication = {
     login: defineAction({
         input: z.object({ username: z.string(), password: z.string() }),
         async handler(input, context) {
-            const user = await db.select().from(Users).where(eq(Users.username, input.username)).get();
+            const [user] = await db.select().from(Users).where(eq(Users.username, input.username));
             if (!user || !compareSync(input.password, user.passwordHash)) {
                 throw new Error('Invalid username or password');
             }
@@ -97,11 +96,10 @@ export const authentication = {
                 throw new Error('Password not strong enough');
             }
 
-            const loaded = await db
+            const [loaded] = await db
                 .select({ passwordHash: Users.passwordHash })
                 .from(Users)
-                .where(eq(Users.username, user.username))
-                .get();
+                .where(eq(Users.username, user.username));
 
             if (!compareSync(input.oldPassword, loaded!.passwordHash)) {
                 throw new Error('Invalid old password');

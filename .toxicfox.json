@@ -20,7 +20,7 @@
                 "{{base}}/data/FileThing/data.db": "/srv/data.db",
                 "{{base}}/data/FileThing/data": "/srv/data"
             },
-            "networks": ["router"]
+            "networks": ["router", "database"]
         }
     ]
 }

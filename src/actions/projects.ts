@@ -9,7 +9,7 @@ import { config } from '../config';
 import { DataFile } from '../file';
 
 export async function getProject(token: string) {
-    const project = await db.select().from(Projects).where(eq(Projects.projectToken, token)).get();
+    const [project] = await db.select().from(Projects).where(eq(Projects.projectToken, token));
     if (!project) {
         throw new Error('Invalid project token');
     }
@@ -37,7 +37,7 @@ export const projects = {
         async handler(input, context) {
             const user = await permission(context, (u) => true);
 
-            const inserted = await db
+            const [inserted] = await db
                 .insert(Projects)
                 .values({
                     name: input.name,
@@ -45,8 +45,7 @@ export const projects = {
                     username: user.username,
                     projectToken: createRandomToken(),
                 })
-                .returning()
-                .get();
+                .returning();
 
             return inserted.id;
         },
@@ -101,11 +100,10 @@ export const projects = {
         async handler(input, context) {
             const user = await permission(context, (u) => true);
 
-            const loaded = await db
+            const [loaded] = await db
                 .select()
                 .from(Projects)
-                .where(and(eq(Projects.id, input.id), eq(Projects.username, user.username)))
-                .get();
+                .where(and(eq(Projects.id, input.id), eq(Projects.username, user.username)));
 
             if (!loaded) {
                 throw new Error('Project not found');
@@ -141,8 +139,6 @@ export const projects = {
     vacuum: defineAction({
         async handler(input, context) {
             await permission(context, (u) => true);
-
-            await db.run(sql`vacuum`);
         },
     }),
 

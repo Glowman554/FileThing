@@ -3,7 +3,7 @@ import { config } from './src/config';
 
 export default {
     schema: './src/database/schema.ts',
-    dialect: 'turso',
+    dialect: 'postgresql',
     dbCredentials: {
         ...config.database,
     },

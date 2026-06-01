@@ -38,12 +38,11 @@ export const files = {
         async handler(input, context) {
             const user = await permission(context, (u) => true);
 
-            const file = await db
+            const [file] = await db
                 .select({ id: Files.id, project: Files.project })
                 .from(Files)
                 .innerJoin(Projects, eq(Files.project, Projects.id))
-                .where(and(eq(Files.id, input.id), eq(Projects.username, user.username)))
-                .get();
+                .where(and(eq(Files.id, input.id), eq(Projects.username, user.username)));
 
             if (!file) {
                 throw new Error('File not found');

@@ -18,11 +18,7 @@ const cacheLifetime = 90 * 24 * 60 * 60;
 export async function GET(context: APIContext) {
     const { id } = context.params;
 
-    const file = await db
-        .select({ project: Files.project, name: Files.name })
-        .from(Files)
-        .where(eq(Files.id, id!))
-        .get();
+    const [file] = await db.select({ project: Files.project, name: Files.name }).from(Files).where(eq(Files.id, id!));
     if (!file) {
         throw new Error('Invalid file id');
     }
@@ -54,11 +50,10 @@ export async function POST(context: APIContext) {
         throw new Error('Missing authentication token');
     }
 
-    const file = await db
+    const [file] = await db
         .select({ uploadToken: Files.uploadToken, project: Files.project })
         .from(Files)
-        .where(eq(Files.id, id!))
-        .get();
+        .where(eq(Files.id, id!));
     if (!file) {
         throw new Error('Invalid file id');
     }

@@ -1,26 +1,12 @@
 {
     "version": "7",
-    "dialect": "sqlite",
+    "dialect": "postgresql",
     "entries": [
         {
             "idx": 0,
-            "version": "6",
-            "when": 1734643236426,
+            "version": "7",
+            "when": 1780311423119,
             "tag": "0000_initial",
-            "breakpoints": true
-        },
-        {
-            "idx": 1,
-            "version": "6",
-            "when": 1734677497154,
-            "tag": "0001_optional_upload_token",
-            "breakpoints": true
-        },
-        {
-            "idx": 2,
-            "version": "6",
-            "when": 1780296545919,
-            "tag": "0002_move-content",
             "breakpoints": true
         }
     ]

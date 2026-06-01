@@ -1,46 +1,36 @@
 {
-    "version": "6",
-    "dialect": "sqlite",
-    "id": "57c3ea6c-070b-41be-8cfd-241d440dcd34",
+    "id": "00ee492b-4330-4af1-a0ca-0cb81e957cca",
     "prevId": "00000000-0000-0000-0000-000000000000",
+    "version": "7",
+    "dialect": "postgresql",
     "tables": {
-        "files": {
+        "public.files": {
             "name": "files",
+            "schema": "",
             "columns": {
                 "id": {
                     "name": "id",
                     "type": "text",
                     "primaryKey": true,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "project": {
                     "name": "project",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "name": {
                     "name": "name",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "uploadToken": {
                     "name": "uploadToken",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true,
-                    "autoincrement": false
-                },
-                "content": {
-                    "name": "content",
-                    "type": "blob",
-                    "primaryKey": false,
-                    "notNull": false,
-                    "autoincrement": false
+                    "notNull": false
                 }
             },
             "indexes": {},
@@ -57,47 +47,40 @@
             },
             "compositePrimaryKeys": {},
             "uniqueConstraints": {},
-            "checkConstraints": {}
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
         },
-        "projects": {
+        "public.projects": {
             "name": "projects",
+            "schema": "",
             "columns": {
                 "name": {
                     "name": "name",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "id": {
                     "name": "id",
                     "type": "text",
                     "primaryKey": true,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "username": {
                     "name": "username",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "projectToken": {
                     "name": "projectToken",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 }
             },
-            "indexes": {
-                "projects_name_unique": {
-                    "name": "projects_name_unique",
-                    "columns": ["name"],
-                    "isUnique": true
-                }
-            },
+            "indexes": {},
             "foreignKeys": {
                 "projects_username_users_username_fk": {
                     "name": "projects_username_users_username_fk",
@@ -110,33 +93,39 @@
                 }
             },
             "compositePrimaryKeys": {},
-            "uniqueConstraints": {},
-            "checkConstraints": {}
+            "uniqueConstraints": {
+                "projects_name_unique": {
+                    "name": "projects_name_unique",
+                    "nullsNotDistinct": false,
+                    "columns": ["name"]
+                }
+            },
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
         },
-        "sessions": {
+        "public.sessions": {
             "name": "sessions",
+            "schema": "",
             "columns": {
                 "username": {
                     "name": "username",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "token": {
                     "name": "token",
                     "type": "text",
                     "primaryKey": true,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "creationDate": {
                     "name": "creationDate",
-                    "type": "integer",
+                    "type": "timestamp with time zone",
                     "primaryKey": false,
                     "notNull": true,
-                    "autoincrement": false,
-                    "default": "(strftime('%s', 'now'))"
+                    "default": "CURRENT_TIMESTAMP"
                 }
             },
             "indexes": {},
@@ -153,49 +142,52 @@
             },
             "compositePrimaryKeys": {},
             "uniqueConstraints": {},
-            "checkConstraints": {}
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
         },
-        "users": {
+        "public.users": {
             "name": "users",
+            "schema": "",
             "columns": {
                 "username": {
                     "name": "username",
                     "type": "text",
                     "primaryKey": true,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 },
                 "administrator": {
                     "name": "administrator",
-                    "type": "integer",
+                    "type": "boolean",
                     "primaryKey": false,
                     "notNull": true,
-                    "autoincrement": false,
                     "default": false
                 },
                 "passwordHash": {
                     "name": "passwordHash",
                     "type": "text",
                     "primaryKey": false,
-                    "notNull": true,
-                    "autoincrement": false
+                    "notNull": true
                 }
             },
             "indexes": {},
             "foreignKeys": {},
             "compositePrimaryKeys": {},
             "uniqueConstraints": {},
-            "checkConstraints": {}
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
         }
     },
-    "views": {},
     "enums": {},
+    "schemas": {},
+    "sequences": {},
+    "roles": {},
+    "policies": {},
+    "views": {},
     "_meta": {
+        "columns": {},
         "schemas": {},
-        "tables": {},
-        "columns": {}
-    },
-    "internal": {
-        "indexes": {}
+        "tables": {}
     }
 }
