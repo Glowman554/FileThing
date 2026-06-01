@@ -16,7 +16,9 @@
             },
             "mounts": {
                 "/etc/letsencrypt": "/etc/letsencrypt",
-                "{{base}}/data/FileThing/": "/srv/"
+                "{{base}}/data/FileThing/config.json": "/srv/config.json",
+                "{{base}}/data/FileThing/data.db": "/srv/data.db",
+                "{{base}}/data/FileThing/data": "/srv/data"
             },
             "networks": ["router"]
         }
