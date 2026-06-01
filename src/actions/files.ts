@@ -6,6 +6,7 @@ import { db } from '../database/database';
 import { permission } from './authentication';
 import { config } from '../config';
 import { file } from 'astro/loaders';
+import { DataFile } from '../file';
 
 export type File = Omit<Omit<InferSelectModel<typeof Files>, 'content'>, 'uploadToken'> & { url: string };
 
@@ -38,7 +39,7 @@ export const files = {
             const user = await permission(context, (u) => true);
 
             const file = await db
-                .select({ id: Files.id })
+                .select({ id: Files.id, project: Files.project })
                 .from(Files)
                 .innerJoin(Projects, eq(Files.project, Projects.id))
                 .where(and(eq(Files.id, input.id), eq(Projects.username, user.username)))
@@ -49,6 +50,11 @@ export const files = {
             }
 
             await db.delete(Files).where(and(eq(Files.id, input.id)));
+
+            const dataFile = new DataFile(file.project, input.id);
+            if (await dataFile.checkExists()) {
+                await dataFile.delete();
+            }
         },
     }),
 };

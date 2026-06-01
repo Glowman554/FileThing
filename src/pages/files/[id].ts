@@ -1,7 +1,8 @@
 import { type APIContext } from 'astro';
 import { db } from '../../database/database';
 import { Files } from '../../database/schema';
-import { and, eq, isNotNull, isNull } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import { DataFile } from '../../file';
 
 export const prerender = false;
 
@@ -18,22 +19,27 @@ export async function GET(context: APIContext) {
     const { id } = context.params;
 
     const file = await db
-        .select({ content: Files.content, name: Files.name })
+        .select({ project: Files.project, name: Files.name })
         .from(Files)
-        .where(and(eq(Files.id, id!), isNotNull(Files.content)))
+        .where(eq(Files.id, id!))
         .get();
     if (!file) {
         throw new Error('Invalid file id');
     }
 
-    const blob = new Blob([new Uint8Array(file.content!)]);
+    const dataFile = new DataFile(file.project, id!);
+    if (!(await dataFile.checkExists())) {
+        throw new Error('File content not found');
+    }
+
+    const blob = new Blob([new Uint8Array(await dataFile.read())]);
 
     return new Response(blob, {
         status: 200,
         headers: {
             'Content-Type': 'application/octet-stream',
             'Content-Disposition': `attachment; filename="${file.name}"`,
-            'Content-Length': file.content!.length.toString(),
+            'Content-Length': blob.size.toString(),
             'Cache-Control': `public, max-age=${cacheLifetime}`,
             ...headers,
         },
@@ -49,22 +55,25 @@ export async function POST(context: APIContext) {
     }
 
     const file = await db
-        .select({ uploadToken: Files.uploadToken })
+        .select({ uploadToken: Files.uploadToken, project: Files.project })
         .from(Files)
-        .where(and(eq(Files.id, id!), isNull(Files.content)))
+        .where(eq(Files.id, id!))
         .get();
     if (!file) {
         throw new Error('Invalid file id');
+    }
+
+    const dataFile = new DataFile(file.project, id!);
+    if (await dataFile.checkExists()) {
+        throw new Error('File already exists');
     }
 
     if (file.uploadToken != token) {
         throw new Error('Invalid upload token');
     }
 
-    await db
-        .update(Files)
-        .set({ content: Buffer.from(await context.request.bytes()) })
-        .where(eq(Files.id, id!));
+    const content = await context.request.arrayBuffer();
+    await dataFile.write(Buffer.from(content));
 
     return new Response('{}', {
         status: 200,

@@ -25,3 +25,5 @@ data.db
 
 # jetbrains setting folder
 .idea/
+
+data

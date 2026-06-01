@@ -80,7 +80,7 @@ function Wrapped(props: Props) {
                 <div>
                     <h1 class="text-3xl">{project.name}</h1>
                     <br />
-                    <div class='flex justify-between'>
+                    <div class="flex justify-between">
                         <div>
                             <button class="rounded-sm bg-neutral-600 p-2" onClick={() => setTokenVisible(true)}>
                                 Show token

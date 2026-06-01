@@ -5,6 +5,7 @@ import { getProject } from '../../../actions/projects';
 import { v4 } from 'uuid';
 import { db } from '../../../database/database';
 import { Files } from '../../../database/schema';
+import { DataFile } from '../../../file';
 
 export const prerender = false;
 
@@ -40,10 +41,10 @@ export async function POST(context: APIContext) {
 
     const content = await fetch(input.url).then((res) => res.arrayBuffer());
 
-    await db
-        .insert(Files)
-        .values({ id, name, project: project.id, content: Buffer.from(content) })
-        .execute();
+    await db.insert(Files).values({ id, name, project: project.id }).execute();
+
+    const dataFile = new DataFile(project.id, id);
+    await dataFile.write(Buffer.from(content));
 
     const result = {
         id,

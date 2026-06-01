@@ -2,7 +2,7 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import { sql } from 'drizzle-orm';
-import { blob, int, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { int, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const Users = sqliteTable('users', {
     username: text('username').primaryKey().notNull(),
@@ -36,5 +36,4 @@ export const Files = sqliteTable('files', {
         .notNull(),
     name: text('name').notNull(),
     uploadToken: text('uploadToken'),
-    content: blob('content', { mode: 'buffer' }),
 });

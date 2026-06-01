@@ -6,6 +6,7 @@ import { string, z } from 'astro:schema';
 import { createRandomToken, permission } from './authentication';
 import { v4 } from 'uuid';
 import { config } from '../config';
+import { DataFile } from '../file';
 
 export async function getProject(token: string) {
     const project = await db.select().from(Projects).where(eq(Projects.projectToken, token)).get();
@@ -58,6 +59,19 @@ export const projects = {
         async handler(input, context) {
             const user = await permission(context, (u) => true);
 
+            const files = await db
+                .select({ id: Files.id, project: Files.project })
+                .from(Files)
+                .innerJoin(Projects, eq(Files.project, Projects.id))
+                .where(and(eq(Files.project, input.id), eq(Projects.username, user.username)));
+
+            for (const file of files) {
+                const dataFile = new DataFile(file.project, file.id);
+                if (await dataFile.checkExists()) {
+                    await dataFile.delete();
+                }
+            }
+
             await db
                 .delete(Projects)
                 .where(and(eq(Projects.id, input.id), eq(Projects.username, user.username)))
@@ -108,8 +122,19 @@ export const projects = {
         async handler(input, context) {
             await permission(context, (u) => true);
 
+            const files = await db
+                .select({ id: Files.id, project: Files.project })
+                .from(Files)
+                .where(eq(Files.project, input.id));
+
+            for (const file of files) {
+                const dataFile = new DataFile(file.project, file.id);
+                if (await dataFile.checkExists()) {
+                    await dataFile.delete();
+                }
+            }
+
             await db.delete(Files).where(eq(Files.project, input.id));
-            await db.run(sql`vacuum`);
         },
     }),
 
